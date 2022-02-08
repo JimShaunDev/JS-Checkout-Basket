@@ -43,26 +43,34 @@ document.getElementById("info-btn").addEventListener("click", function(e){
 
 
 /*SET UP CART FUNCTIONALITY*/
-let cart = [1]
+let cart = []
 
 //Add to cart function when buying products
-function AddToCart(){
-
+function AddToCart(id){
+    alert(`Added ${products[id].title} to cart!"`);
+    cart.push(products[id])
+    console.log(cart)
 }
 
 //Update Cart
 function UpdateCart(){
 
     cartHTML = "";
-
-    //add item html to cart
-    cartHTML+=   `<div class="row my-1">
-    <div class="col-2">  <img class="w-100" src="img/shoe1.jpg">   </div>
-    <div class="col-4">   Shoe 1 </div>
+    cartTotal = 0;
+    cart.forEach(product=>{
+        cartTotal += product.price;
+        cartHTML+=`
+        <div class="row my-1">
+    <div class="col-2">  <img class="w-100" src="${product.img}">   </div>
+    <div class="col-4">   ${product.title} </div>
     <div class="col-2"> <input class="w-100" type="number" placeholder="1"> </div>
-    <div class="col-2">  £ 49.99 </div>
+    <div class="col-2">  £ ${product.price} </div>
     <div class="col-2">   <div class="btn btn-danger">X</div>      </div>
-  </div>`;
+  </div>
+        `
+    })
+
+    cartHTML +=`<div class="row"><div class="col-12"> Total: £${cartTotal.toFixed(2)}</div></div>`;
 
     return cartHTML;
     
@@ -87,6 +95,16 @@ items.forEach(item =>{
         infoModal.show()
     })
 });
+
+//add event listener to every button!
+addToCartBtns.forEach(cartBtn =>{
+    //when cart button is clicked, pass in the id of the button
+    cartBtn.addEventListener("click", function(e){
+        AddToCart(e.target.id)
+    })
+});
+
+
 
 //attach modal for cart to JS
 var cartModal = new bootstrap.Modal(document.getElementById("cart-modal"));
